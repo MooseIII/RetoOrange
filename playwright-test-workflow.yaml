@@ -1,0 +1,30 @@
+apiVersion: testworkflows.testkube.io/v1
+kind: TestWorkflow
+metadata:
+  name: playwright-e2e
+  namespace: testkube
+
+spec:
+  content:
+    git:
+      uri: https://github.com/Mooselll/Linktic-Testkube-Playwright.git
+      branch: main
+
+  container:
+    image: mcr.microsoft.com/playwright:v1.41.2-jammy
+
+  steps:
+    - name: Install dependencies
+      shell: bash
+      run: |
+        npm ci
+
+    - name: Install Playwright browsers
+      shell: bash
+      run: |
+        npx playwright install --with-deps
+
+    - name: Run Playwright tests
+      shell: bash
+      run: |
+        npx playwright test --reporter=line
